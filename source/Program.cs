@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace ConsoleApplication
 {
@@ -6,7 +7,8 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var asd = new MOSESParser.Parser();
+            asd.Test();
         }
     }
 }
