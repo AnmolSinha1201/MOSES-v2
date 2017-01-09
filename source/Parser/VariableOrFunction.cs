@@ -13,12 +13,14 @@ namespace MOSESParser
 			StringBuilder rightBuilder = new StringBuilder();
 			while (true) 
 			{
+				if (origin == code.Length)
+					break;
 				right = dotUnwrap(code, ref origin) ?? bracketUnwrap(code, ref origin);
 				if (right == null)
 					break;
 				rightBuilder.Append("." + right);
 			}
-
+			
 			return retVal + (rightBuilder.Length == 0 ? "" : rightBuilder.ToString());
 		}
 

@@ -43,10 +43,10 @@ namespace MOSESParser
 			int pos = origin;
 			_this = THIS(code, ref pos);
 			vorF = variableOrFunctionChaining(code, ref pos);
-			if (vorF != null && vorF[vorF.Length - 2] != ')')
+			if (vorF != null && vorF[vorF.Length - 1] != ')')
 			{
 				origin = pos;
-				return (this == null ? "" : "this.") + vorF;
+				return (_this == null ? "" : "this.") + vorF;
 			}
 			return null;
 		}
