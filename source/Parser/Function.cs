@@ -40,5 +40,19 @@ namespace MOSESParser
 			
 			return functionName + "()";
 		}
+
+		string complexFunctionCall(string code, ref int origin)
+		{
+			string _this = null, vorF = null;
+			int pos = origin;
+			_this = THIS(code, ref pos);
+			vorF = variableOrFunctionChaining(code, ref pos);
+			if (vorF != null && vorF[vorF.Length - 1] == ')')
+			{
+				origin = pos;
+				return (_this == null ? "" : "this.") + vorF;
+			}
+			return null;
+		}
 	}
 }
