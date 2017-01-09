@@ -5,7 +5,15 @@ namespace MOSESParser
 {
 	partial class Parser
 	{
-		object NAME(string code, ref int origin)
+		string THIS(string code, ref int origin)
+		{
+			if (!code.Substring(origin, 4).Equals("this", StringComparison.OrdinalIgnoreCase))
+				return null;
+			origin += 4;
+			return "this";
+		}
+		
+		string NAME(string code, ref int origin)
 		{
 			const string first = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
 			const string last = first + "0123456789";
@@ -19,19 +27,19 @@ namespace MOSESParser
 			return code.Substring(start, origin - start);
 		}
 
-		object STRING(string code, ref int origin)
+		string STRING(string code, ref int origin)
 		{
 			Regex regex = new Regex(@"""(?>[^\\""]+|\\.)*""");
 			Match match = regex.Match(code, origin);
 			if (match.Success)
 			{
-				origin = match.Index;
+				origin = match.Index + match.Length;
 				return match.Value;
 			}
 			return null;
 		}
 
-		object INT(string code, ref int origin)
+		string INT(string code, ref int origin)
 		{
 			int start = origin;
 			while(origin < code.Length && "0123456789".Contains(code[origin].ToString()))
@@ -39,7 +47,7 @@ namespace MOSESParser
 			return code.Substring(start, origin - start);
 		}
 
-		object NUMBER(string code, ref int origin)
+		string NUMBER(string code, ref int origin)
 		{
 			return INT(code, ref origin);
 		}
