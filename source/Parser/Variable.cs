@@ -9,7 +9,7 @@ namespace MOSESParser
 			return NAME(code, ref origin);
 		}
 
-		object variableAssign(string code, ref int origin)
+		string variableAssign(string code, ref int origin)
 		{
 			string varName = complexVariable(code, ref origin);
 

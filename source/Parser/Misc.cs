@@ -54,7 +54,7 @@ namespace MOSESParser
 
 		object CRLFWS(string code, ref int origin)
 		{
-			while ("\r\n\t ".Contains(code[origin].ToString()))
+			while (origin < code.Length && "\r\n\t ".Contains(code[origin].ToString()))
 				origin++;
 			return null;
 		}
