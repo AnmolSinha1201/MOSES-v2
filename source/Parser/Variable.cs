@@ -12,6 +12,8 @@ namespace MOSESParser
 		string variableAssign(string code, ref int origin)
 		{
 			string varName = complexVariable(code, ref origin);
+			if (varName == null)
+				return null;
 
 			CRLFWS(code, ref origin);
 			string op = null;

@@ -7,7 +7,9 @@ namespace MOSESParser
 	{
 		string variableOrFunctionChaining(string code, ref int origin)
 		{
-			string retVal =  variableOrFunction(code, ref origin); 
+			string retVal =  variableOrFunction(code, ref origin);
+			if (retVal == null)
+				return null; 
 			
 			string right = null;
 			StringBuilder rightBuilder = new StringBuilder();

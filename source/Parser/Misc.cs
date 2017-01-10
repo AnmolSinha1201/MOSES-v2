@@ -7,6 +7,8 @@ namespace MOSESParser
 	{
 		string THIS(string code, ref int origin)
 		{
+			if (code.Length <= origin + "this".Length)
+				return null;
 			if (!code.Substring(origin, 4).Equals("this", StringComparison.OrdinalIgnoreCase))
 				return null;
 			origin += 4;
