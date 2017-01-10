@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + block("for (1;2;3) asd=10", ref i));
+			Console.WriteLine("test : " + ifElse("if(\"qwe\"){} else asd = 10", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -24,7 +24,8 @@ namespace MOSESParser
 
 		string innerFuncionBlock(string code, ref int origin)
 		{
-			return  loops(code, ref origin) ?? complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin);
+			return  loops(code, ref origin) ?? complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin)
+			?? ifElse(code, ref origin);
 		}
 
 		string loopBlock(string code, ref int origin)
