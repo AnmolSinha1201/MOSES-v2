@@ -21,10 +21,13 @@ namespace MOSESParser
 			const string last = first + "0123456789";
 
 			int start = origin;
+			if (code.Length <= origin + 1)
+				return null;
 			if (!first.Contains(code[origin].ToString()))
 				return null;
 			origin++;
-			while(last.Contains(code[origin].ToString()))
+
+			while(code.Length > origin && last.Contains(code[origin].ToString()))
 				origin++;
 			return code.Substring(start, origin - start);
 		}
