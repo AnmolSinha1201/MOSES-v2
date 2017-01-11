@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + block("asd++", ref i));
+			Console.WriteLine("test : " + block("try{}catch(e){}finally{qwe=123}", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -27,11 +27,12 @@ namespace MOSESParser
 			loops & ifelse -> functions (to prevent functions production catching if/else/loops)
 			pre/pos increment/decrement -> variables (to prevent variable production catching variable++)
 			functions -> variable (to prevent variable from catching NAME(parameters) of functions)
+			tryCatchFinally -> variable (to prevent catching "try" as a variable)
 		*/
 		string innerFuncionBlock(string code, ref int origin)
 		{
 			return  prePostIncrementDecrement(code, ref origin) ?? loops(code, ref origin) ?? ifElse(code, ref origin) ??
-			complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin);
+			tryCatchFinally(code, ref origin) ?? complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin);
 		}
 
 		string loopBlock(string code, ref int origin)
