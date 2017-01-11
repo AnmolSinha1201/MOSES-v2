@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + ifElse("if(\"qwe\"){} else asd = 10", ref i));
+			Console.WriteLine("test : " + block("asd++", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -22,10 +22,16 @@ namespace MOSESParser
 			return innerFuncionBlock(code, ref origin);
 		}
 
+		/*
+		order of parsing :
+			loops & ifelse -> functions (to prevent functions production catching if/else/loops)
+			pre/pos increment/decrement -> variables (to prevent variable production catching variable++)
+			functions -> variable (to prevent variable from catching NAME(parameters) of functions)
+		*/
 		string innerFuncionBlock(string code, ref int origin)
 		{
-			return  loops(code, ref origin) ?? complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin)
-			?? ifElse(code, ref origin);
+			return  prePostIncrementDecrement(code, ref origin) ?? loops(code, ref origin) ?? ifElse(code, ref origin) ??
+			complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin);
 		}
 
 		string loopBlock(string code, ref int origin)
@@ -72,6 +78,19 @@ namespace MOSESParser
 			pos++;
 			origin = pos;
 			return blockBuilder.ToString();
+		}
+
+		string returnBlock(string code, ref int origin)
+		{
+			const string _return = "return";
+			if (code.Length <= origin + _return.Length)
+				return null;
+			if (!code.Substring(origin, _return.Length).Equals(_return, StringComparison.OrdinalIgnoreCase
+			))
+				return null;
+			origin += _return.Length;
+			string exp = Expression(code, ref origin);
+			return _return + exp;
 		}
 	}
 }
