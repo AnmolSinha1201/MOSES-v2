@@ -15,6 +15,8 @@ namespace MOSESParser
 
         string ifBlock(string code, ref int origin)
         {
+            if (code.Length <= origin + "if".Length)
+                return null;
             int pos = origin;
             if (!code.Substring(pos, 2).Equals("if", StringComparison.OrdinalIgnoreCase))
                 return null;
