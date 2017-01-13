@@ -18,9 +18,23 @@ namespace MOSESParser
 				return null;
 			pos++;
 
+			CRLFWS(code, ref pos);
+			List<string> expressionList = functionCallList(code, ref pos);
+
+			if (code[pos] != ')')
+				return null;
+			pos++;
+
+			origin = pos;
+			return functionName + "("+ expressionList.Count +")";
+		}
+
+		List<string> functionCallList(string code, ref int origin)
+		{
+			int pos = origin;
 			List<string> expressionList = new List<string>();
 			string s;
-			CRLFWS(code, ref pos);
+			
 			if ((s = Expression(code, ref pos)) != null)
 			{
 				expressionList.Add(s);
@@ -36,12 +50,8 @@ namespace MOSESParser
 				}
 			}
 
-			if (code[pos] != ')')
-				return null;
-			pos++;
 			origin = pos;
-			
-			return functionName + "()";
+			return expressionList;
 		}
 
 		string complexFunctionCall(string code, ref int origin)
