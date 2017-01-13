@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + block("try{}catch(e){}finally{qwe=123}", ref i));
+			Console.WriteLine("test : " + block("myFunc(zxc , qwe = 123 , asd *){qwe=10}", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -17,9 +17,13 @@ namespace MOSESParser
 			return null;
 		}
 
+		/*
+		order of parsing :
+			functionDeclaration -> innerFuncionBlock (to prevent functions catching)
+		*/
 		string block(string code, ref int origin)
 		{
-			return innerFuncionBlock(code, ref origin);
+			return functionDeclaration(code, ref origin) ?? innerFuncionBlock(code, ref origin);
 		}
 
 		/*
