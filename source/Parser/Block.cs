@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + block("class asd{asd= 10 qwe(){}}", ref i));
+			Console.WriteLine("test : " + block("include(123)", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -20,10 +20,13 @@ namespace MOSESParser
 		/*
 		order of parsing :
 			functionDeclaration -> innerFuncionBlock (to prevent functions catching)
+			includeBlock -> functionDeclaration (to prevent functions catching)
+			classDeclaration -> innerFuncionBlock (to prevent name catching)
 		*/
 		string block(string code, ref int origin)
 		{
-			return classDeclaration(code, ref origin) ?? functionDeclaration(code, ref origin) ?? 
+			return includeBlock(code, ref origin) ?? classDeclaration(code, ref origin) ?? 
+			functionDeclaration(code, ref origin) ?? 
 			innerFuncionBlock(code, ref origin);
 		}
 
@@ -104,5 +107,34 @@ namespace MOSESParser
             return classDeclaration(code, ref origin) ?? functionDeclaration(code, ref origin) ?? 
             constantVariableAssign(code, ref origin);
         }
+
+		string includeBlock(string code, ref int origin)
+		{
+			const string __include = "include";
+			int pos = origin;
+			if (code.Length <= origin + __include.Length)
+				return null;
+			if (!code.Substring(origin, __include.Length).Equals(__include, StringComparison.OrdinalIgnoreCase))
+				return null;
+			pos += __include.Length;
+
+			CRLFWS(code, ref pos);
+			if (code[pos] != '(')
+				return null;
+			pos++;
+			CRLFWS(code, ref pos);
+
+			string exp = Expression(code, ref pos);
+			if (exp == null)
+				return null;
+
+			CRLFWS(code, ref pos);
+			if (code[pos] != ')')
+				return null;
+			pos++;
+			
+			origin = pos;
+			return "#include (" + exp + ")";
+		}
 	}
 }
