@@ -115,6 +115,7 @@ namespace MOSESParser
 				return null;
 			pos++;
 			
+			origin = pos;
 			return "{ " + segValBlock.ToString() + " }";
 		}
 
