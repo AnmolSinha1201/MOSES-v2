@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + block("myFunc(zxc , qwe = 123 , asd *){qwe=10}", ref i));
+			Console.WriteLine("test : " + block("class asd{asd= 10 qwe(){}}", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -23,7 +23,8 @@ namespace MOSESParser
 		*/
 		string block(string code, ref int origin)
 		{
-			return functionDeclaration(code, ref origin) ?? innerFuncionBlock(code, ref origin);
+			return classDeclaration(code, ref origin) ?? functionDeclaration(code, ref origin) ?? 
+			innerFuncionBlock(code, ref origin);
 		}
 
 		/*
@@ -97,5 +98,11 @@ namespace MOSESParser
 			string exp = Expression(code, ref origin);
 			return _return + exp;
 		}
+
+		string innerClassBlock(string code, ref int origin)
+        {
+            return classDeclaration(code, ref origin) ?? functionDeclaration(code, ref origin) ?? 
+            constantVariableAssign(code, ref origin);
+        }
 	}
 }

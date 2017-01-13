@@ -52,5 +52,26 @@ namespace MOSESParser
 			}
 			return null;
 		}
+
+		string constantVariableAssign(string code, ref int origin)
+		{
+			int pos = origin;
+			string varName = variable(code, ref pos);
+			if (varName == null)
+				return null;
+			
+			CRLFWS(code, ref pos);
+			if (code[pos] != '=')
+				return null;
+			pos++;
+			CRLFWS(code, ref pos);
+
+			string val = constantExpression(code, ref pos);
+			if (val == null)
+				return null;
+
+			origin = pos;
+			return varName + " = " + val;
+		}
 	}
 }
