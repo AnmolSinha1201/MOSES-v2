@@ -11,7 +11,9 @@ namespace MOSESParser
             string __try = _try(code, ref pos);
             if (__try == null)
                 return null;
+            CRLFWS(code, ref pos);
             string __catch = _catch(code, ref pos);
+            CRLFWS(code, ref pos);            
             string __finally = _finally(code, ref pos);
             if (__catch == null && __finally == null)
                 return null;
