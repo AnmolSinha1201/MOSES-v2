@@ -38,6 +38,7 @@ namespace MOSESParser
 			if ((s = Expression(code, ref pos)) != null)
 			{
 				expressionList.Add(s);
+				CRLFWS(code, ref pos);
 				while (true)
 				{
 					if (code[pos] != ',')
