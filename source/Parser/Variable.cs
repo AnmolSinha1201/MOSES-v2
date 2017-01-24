@@ -45,12 +45,11 @@ namespace MOSESParser
 			int pos = origin;
 			_this = THIS(code, ref pos);
 			vorF = variableOrFunctionChaining(code, ref pos);
-			if (vorF != null && vorF[vorF.Length - 1] != ')')
-			{
-				origin = pos;
-				return (_this == null ? "" : "this.") + vorF;
-			}
-			return null;
+			if (vorF == null || vorF[vorF.Length - 1] == ')')
+				return null;
+
+			origin = pos;
+			return (_this == null ? "" : "this.") + vorF;
 		}
 
 		string constantVariableAssign(string code, ref int origin)
