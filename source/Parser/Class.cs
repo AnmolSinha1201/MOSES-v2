@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace MOSESParser
@@ -40,6 +41,116 @@ namespace MOSESParser
 
             origin = pos;
             return $"class {className} {{ {classBlockBuilder.ToString()} }} ";
+        }
+
+        string newInstance(string code, ref int origin)
+        {
+            int pos = origin;
+            const string __new = "new";
+            
+            if (code.Length <= origin + __new.Length)
+                return null;
+            if (!code.Substring(origin, __new.Length).Equals(__new, StringComparison.OrdinalIgnoreCase))
+                return null;
+            pos += __new.Length;
+
+            CRLFWS(code, ref pos);
+            string CName = complexFunctionCall(code, ref pos);
+            if (CName == null)
+                return null;
+
+            origin = pos;
+            return "new " + CName; 
+        }
+
+        string newArray(string code, ref int origin)
+        {
+            int pos = origin;
+            if (code[pos] != '[')
+                return null;
+            pos++;
+
+            CRLFWS(code, ref pos);
+            List<string> items = functionCallList(code, ref pos);
+            CRLFWS(code, ref pos);
+
+            if (code[pos] != ']')
+                return null;
+            pos++;
+
+            origin = pos;
+            return "[" + items.Count + "]";
+        }
+
+        string newDictionary(string code, ref int origin)
+        {
+            int pos = origin;
+            if (code[pos] != '{')
+                return null;
+            pos++;
+
+            CRLFWS(code, ref pos);
+            Dictionary<string, string> dictionaryArgs = dictionaryParamList(code, ref pos);
+            CRLFWS(code, ref pos);
+
+            if (code[pos] != '}')
+                return null;
+            pos++;
+
+            origin = pos;
+            return "{" + dictionaryArgs.Count + "}";
+        }
+
+        Dictionary<string, string> dictionaryParamList(string code, ref int origin)
+		{
+			int pos = origin;
+			Dictionary<string, string> expressionList = new Dictionary<string, string>();
+            KeyValuePair<string, string>? KVP;
+			
+			if ((KVP = dictionaryKVP(code, ref pos)) != null && !expressionList.ContainsKey(KVP.Value.Key))
+			{
+                expressionList.Add(KVP.Value.Key, KVP.Value.Value);
+                CRLFWS(code, ref pos);
+                while (true)
+				{
+                    if (code.Length <= ",".Length + pos)
+                        break;
+					if (code[pos] != ',')
+						break;
+					pos++;
+					CRLFWS(code, ref pos);
+					if ((KVP = dictionaryKVP(code, ref pos)) == null || expressionList.ContainsKey(KVP.Value.Key))
+                    {return null;} //error
+
+					expressionList.Add(KVP.Value.Key, KVP.Value.Value);
+					CRLFWS(code, ref pos);
+				}
+			}
+
+			origin = pos;
+			return expressionList;
+		}
+
+        KeyValuePair<string, string>? dictionaryKVP(string code, ref int origin)
+        {
+            int pos = origin;
+
+            string key = Expression(code, ref pos);
+            if (key == null)
+                return null;
+
+            CRLFWS(code, ref pos);
+            if (code[pos] != ':')
+                return null;
+            pos++;
+            CRLFWS(code, ref pos);
+
+            string value = Expression(code, ref pos);
+            if (value == null)
+                return null;
+            
+            origin = pos;
+            return new KeyValuePair<string, string>(key, value);
         }
     }
 }
