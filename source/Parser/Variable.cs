@@ -18,6 +18,10 @@ namespace MOSESParser
 
 			CRLFWS(code, ref pos);
 			string op = null;
+
+			if (code.Length <= pos)
+				return null;
+			
 			if ((op = opBuilder(code[pos].ToString(), new [] {"="})) != null)
 				pos++;
 			else if ((op = opBuilder(code.Substring(origin, 2), new [] { "+=", "-=", "*=", "/=", "%=", ".=", "|=", "&=", "^=" })) != null)

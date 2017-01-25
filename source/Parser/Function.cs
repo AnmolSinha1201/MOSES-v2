@@ -12,7 +12,7 @@ namespace MOSESParser
 			int pos = origin;
 			string functionName = NAME(code, ref pos);
 			CRLFWS(code, ref pos);
-			if (code.Length <= pos + 2)
+			if (code.Length <= pos + 1)
 				return null;
 			if (code[pos] != '(')
 				return null;
@@ -21,6 +21,8 @@ namespace MOSESParser
 			CRLFWS(code, ref pos);
 			List<string> expressionList = functionCallList(code, ref pos);
 
+			if (code.Length <= pos + 1)
+				return null;
 			if (code[pos] != ')')
 				return null;
 			pos++;
