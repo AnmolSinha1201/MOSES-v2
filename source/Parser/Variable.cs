@@ -11,23 +11,26 @@ namespace MOSESParser
 
 		string variableAssign(string code, ref int origin)
 		{
-			string varName = complexVariable(code, ref origin);
+			int pos = origin;
+			string varName = complexVariable(code, ref pos);
 			if (varName == null)
 				return null;
 
-			CRLFWS(code, ref origin);
+			CRLFWS(code, ref pos);
 			string op = null;
-			if ((op = opBuilder(code[origin].ToString(), new [] {"="})) != null)
-				origin++;
+			if ((op = opBuilder(code[pos].ToString(), new [] {"="})) != null)
+				pos++;
 			else if ((op = opBuilder(code.Substring(origin, 2), new [] { "+=", "-=", "*=", "/=", "%=", ".=", "|=", "&=", "^=" })) != null)
-				origin += 2;
+				pos += 2;
 			else if ((op = opBuilder(code.Substring(origin, 3), new [] { "**=", ">>=", "<<=" })) != null)
-				origin += 3;
+				pos += 3;
 			else
 				return null;
-			CRLFWS(code, ref origin);
+			CRLFWS(code, ref pos);
 			
-			string value = (string)Expression(code, ref origin);
+			string value = Expression(code, ref pos);
+
+			origin = pos;
 			return varName + " = " + value;
 		}
 

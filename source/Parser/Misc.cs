@@ -49,6 +49,8 @@ namespace MOSESParser
 			int start = origin;
 			while(origin < code.Length && "0123456789".Contains(code[origin].ToString()))
 				origin++;
+			if (origin == start)
+				return null;
 			return code.Substring(start, origin - start);
 		}
 
