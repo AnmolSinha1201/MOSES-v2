@@ -44,6 +44,57 @@ namespace MOSESParser
 			return null;
 		}
 
+		string DOUBLE(string code, ref int origin)
+		{
+			int pos = origin;
+			string pre = INT(code, ref pos);
+			if (pre == null)
+				return null;
+
+			if (code.Length <= pos + 1 || code[pos] != '.')
+				return null;
+			pos++;
+			
+			string post = INT(code, ref pos);
+			if (post == null)
+				return null;
+			
+			origin = pos;
+			return pre + "." + post;
+		}
+
+		string BINARY(string code, ref int origin)
+		{
+			int pos = origin;
+			if (code.Length <= pos + 2)
+				return null;
+			if (!code.Substring(pos, 2).Equals("0b", StringComparison.OrdinalIgnoreCase))
+				return null;
+			pos += 2;
+			while(pos < code.Length && "01".Contains(code[pos].ToString()))
+				pos++;
+			
+			string retVal = code.Substring(origin, pos - origin);
+			origin = pos;
+			return retVal;
+		}
+
+		string HEX(string code, ref int origin)
+		{
+			int pos = origin;
+			if (code.Length <= pos + 2)
+				return null;
+			if (!code.Substring(pos, 2).Equals("0x", StringComparison.OrdinalIgnoreCase))
+				return null;
+			pos += 2;
+			while(pos < code.Length && "0123456789abcdefABCDEF".Contains(code[pos].ToString()))
+				pos++;
+			
+			string retVal = code.Substring(origin, pos - origin);
+			origin = pos;
+			return retVal;
+		}
+
 		string INT(string code, ref int origin)
 		{
 			int start = origin;
@@ -54,9 +105,14 @@ namespace MOSESParser
 			return code.Substring(start, origin - start);
 		}
 
+		/*
+		order of parsing :
+		BINARY/HEX -> INT
+		DOUBLE -> INT
+		*/
 		string NUMBER(string code, ref int origin)
 		{
-			return INT(code, ref origin);
+			return BINARY(code, ref origin) ?? HEX(code, ref origin) ?? DOUBLE(code, ref origin) ?? INT(code, ref origin);
 		}
 
 		object CRLFWS(string code, ref int origin)
