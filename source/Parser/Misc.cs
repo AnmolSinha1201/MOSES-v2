@@ -65,5 +65,12 @@ namespace MOSESParser
 				origin++;
 			return null;
 		}
+
+		object WS(string code, ref int origin)
+		{
+			while (origin < code.Length && "\t ".Contains(code[origin].ToString()))
+				origin++;
+			return null;
+		}
 	}
 }
