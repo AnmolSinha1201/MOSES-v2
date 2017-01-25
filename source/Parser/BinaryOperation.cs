@@ -5,20 +5,17 @@ namespace MOSESParser
 {
 	partial class Parser
 	{
-		string binaryOperation(string code, ref int origin)
+		string binaryOperation(string code, ref int origin, string preExpression)
 		{
-			return mathematicalOperation(code, ref origin) ?? concatOperation(code, ref origin) ?? 
-			logicalOperation(code, ref origin) ?? bitwiseOperation(code, ref origin);
+			return mathematicalOperation(code, ref origin, preExpression) ?? concatOperation(code, ref origin, preExpression) ?? 
+			logicalOperation(code, ref origin, preExpression) ?? bitwiseOperation(code, ref origin, preExpression);
 		}
-		string mathematicalOperation(string code, ref int origin)
+		string mathematicalOperation(string code, ref int origin, string preExpression)
 		{
 			int pos = origin;
-			string exp1 = Expression(code, ref pos);
-			if (exp1 == null)
-				return null;
+			string exp1 = preExpression;
 			string op;
 
-			CRLFWS(code, ref pos);
 			if (code.Length <= pos + 2)
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "**" })) != null)
@@ -37,13 +34,10 @@ namespace MOSESParser
 			return exp1 + " " + op + " " + exp2;
 		}
 
-		string concatOperation(string code, ref int origin)
+		string concatOperation(string code, ref int origin, string preExpression)
 		{
 			int pos = origin;
-
-			string exp1 = Expression(code, ref pos);
-			if (exp1 == null)
-				return null;
+			string exp1 = preExpression;
 			
 			if (code.Length <= pos)
 				return null;
@@ -71,15 +65,12 @@ namespace MOSESParser
 			return exp1 + " . " + exp2;
 		}
 
-		string logicalOperation(string code, ref int origin)
+		string logicalOperation(string code, ref int origin, string preExpression)
 		{
 			int pos = origin;
-			string exp1 = Expression(code, ref pos);
-			if (exp1 == null)
-				return null;
+			string exp1 = preExpression;
 			string op;
 
-			CRLFWS(code, ref pos);
 			if (code.Length <= pos + 2)
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "<=", ">=", "!=", "==", "&&", "||" })) != null)
@@ -98,15 +89,12 @@ namespace MOSESParser
 			return exp1 + " " + op + " " + exp2;
 		}
 
-		string bitwiseOperation(string code, ref int origin)
+		string bitwiseOperation(string code, ref int origin, string preExpression)
 		{
 			int pos = origin;
-			string exp1 = Expression(code, ref pos);
-			if (exp1 == null)
-				return null;
+			string exp1 = preExpression;
 			string op;
 
-			CRLFWS(code, ref pos);
 			if (code.Length <= pos + 2)
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "<<", ">>" })) != null)
