@@ -128,5 +128,16 @@ namespace MOSESParser
 				origin++;
 			return null;
 		}
+
+		string CRLF(string code, ref int origin)
+		{
+			bool retVal = false;
+			while (origin < code.Length && "\r\n".Contains(code[origin].ToString()))
+			{
+				retVal = true;
+				origin++;
+			}
+			return retVal ? "\n" : null;
+		}
 	}
 }

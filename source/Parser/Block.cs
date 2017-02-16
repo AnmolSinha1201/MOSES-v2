@@ -8,13 +8,23 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + block("include(123)", ref i));
+			Console.WriteLine("test : " + chunk("class asd{\nqwe=123\nasd=456\nqwe(asd, zxc){}}", ref i));
 		}
 
 		string chunk(string code, ref int origin)
 		{
-			while (block(code, ref origin) != null);
-			return null;
+			StringBuilder sb = new StringBuilder();
+			while (true)
+			{
+				string _block = block(code, ref origin);
+				if (_block == null)
+					return null;
+				sb.Append(sb.Length == 0 ? _block : "\n" + _block);
+
+				if (CRLF(code, ref origin) == null)
+					break;
+			}
+			return sb.ToString();
 		}
 
 		/*
