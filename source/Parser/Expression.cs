@@ -19,10 +19,16 @@ namespace MOSESParser
 
 			if (part1 == null)
 				return null;
-			CRLFWS(code, ref origin);
 			
-			string part2 = ternaryOperation(code, ref origin, part1) ?? binaryOperation(code, ref origin, part1);
-			return part2 == null ? part1 : part2;
+			int pos = origin;
+			CRLFWS(code, ref pos);
+			
+			string part2 = ternaryOperation(code, ref pos, part1) ?? binaryOperation(code, ref pos, part1);
+			
+			if (part2 == null)
+				return part1;
+			origin = pos;
+			return part2;
 		}
 
 		string constantExpression(string code, ref int origin)
