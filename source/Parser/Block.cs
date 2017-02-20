@@ -8,15 +8,18 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + chunk("class asd{\nqwe=123\nasd=456\nqwe(asd, zxc){}}", ref i));
+			Console.WriteLine("test : " + chunk("qwe=\"\"", ref i));
 		}
 
 		string chunk(string code, ref int origin)
 		{
+			code = removeComments(code);
 			StringBuilder sb = new StringBuilder();
 			while (true)
 			{
+				WS(code, ref origin);
 				string _block = block(code, ref origin);
+				WS(code, ref origin);
 				if (_block == null)
 					return null;
 				sb.Append(sb.Length == 0 ? _block : "\n" + _block);
