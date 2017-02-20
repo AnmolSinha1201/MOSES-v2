@@ -33,6 +33,8 @@ namespace MOSESParser
 			CRLFWS(code, ref pos);
 			
 			string value = Expression(code, ref pos);
+			if (value == null)
+				return null;
 
 			origin = pos;
 			return varName + " = " + value;
