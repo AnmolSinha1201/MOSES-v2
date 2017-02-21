@@ -60,7 +60,7 @@ namespace MOSESParser
 			pos++;
 
 			WS(code, ref pos);
-			string right = complexVariable(code, ref pos) ?? NUMBER(code, ref pos);
+			string right = Expression(code, ref pos);
 			if (right == null)
 				return null;
 			

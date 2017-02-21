@@ -20,8 +20,10 @@ namespace MOSESParser
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "**" })) != null)
 				pos += 2;
-			else if ((op = opBuilder(code[pos].ToString(), new [] { "+", "-", "*", "/", "%" })) != null)
+			else if ((op = opBuilder(code[pos].ToString(), new [] { "+", "*", "/", "%" })) != null)
 				pos += 1;
+			else if ((opBuilder(code[pos].ToString(), new [] { "-" })) != null) //to allow right association
+				op = "+";
 			else
 				return null;
 			CRLFWS(code, ref pos);
