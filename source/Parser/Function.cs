@@ -11,6 +11,9 @@ namespace MOSESParser
 		{
 			int pos = origin;
 			string functionName = NAME(code, ref pos);
+			if (functionName == null)
+				return null;
+
 			CRLFWS(code, ref pos);
 			if (code.Length <= pos + 1)
 				return null;
