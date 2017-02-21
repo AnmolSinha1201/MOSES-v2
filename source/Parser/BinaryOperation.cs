@@ -16,7 +16,7 @@ namespace MOSESParser
 			string exp1 = preExpression;
 			string op;
 
-			if (code.Length <= pos + 2)
+			if (code.Length < pos + 2)
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "**" })) != null)
 				pos += 2;
@@ -71,7 +71,7 @@ namespace MOSESParser
 			string exp1 = preExpression;
 			string op;
 
-			if (code.Length <= pos + 2)
+			if (code.Length < pos + 2)
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "<=", ">=", "!=", "==", "&&", "||" })) != null)
 				pos += 2;
@@ -95,7 +95,7 @@ namespace MOSESParser
 			string exp1 = preExpression;
 			string op;
 
-			if (code.Length <= pos + 2)
+			if (code.Length < pos + 2)
 				return null;
 			if ((op = opBuilder(code[pos].ToString(), new [] { "<<", ">>" })) != null)
 				pos += 2;

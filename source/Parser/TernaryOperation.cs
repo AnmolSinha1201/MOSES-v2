@@ -14,7 +14,7 @@ namespace MOSESParser
 		{
 			int pos = origin;
 			string exp1 = preExpression;
-			if (code.Length <= pos + 1 || code[pos] != '?')
+			if (code.Length < pos + 1 || code[pos] != '?')
 				return null;
 			pos++;
 			string exp2, exp3;
@@ -24,7 +24,7 @@ namespace MOSESParser
 				return null;
 
 			CRLFWS(code, ref pos);
-			if (code.Length <= pos + 1 || code[pos] != ':')
+			if (code.Length < pos + 1 || code[pos] != ':')
 				return null;
 			pos++;
 
@@ -40,7 +40,7 @@ namespace MOSESParser
 		{
 			int pos = origin;
 			string exp1 = preExpression;
-			if (code.Length <= pos + "??".Length || code.Substring(pos, 2) != "??")
+			if (code.Length < pos + "??".Length || code.Substring(pos, 2) != "??")
 				return null;
 			pos += 2;
 			string exp2;
