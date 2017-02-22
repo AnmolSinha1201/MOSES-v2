@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -33,7 +34,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return exp1 + " " + op + " " + exp2;
+			return visitor.binaryOperation(new binaryOperationClass(exp1, op, exp2));
 		}
 
 		string concatOperation(string code, ref int origin, string preExpression)
@@ -64,7 +65,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return exp1 + " . " + exp2;
+			return visitor.binaryOperation(new binaryOperationClass(exp1, ".", exp2));
 		}
 
 		string logicalOperation(string code, ref int origin, string preExpression)
@@ -88,7 +89,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return exp1 + " " + op + " " + exp2;
+			return visitor.binaryOperation(new binaryOperationClass(exp1, op, exp2));
 		}
 
 		string bitwiseOperation(string code, ref int origin, string preExpression)
@@ -112,7 +113,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return exp1 + " " + op + " " + exp2;
+			return visitor.binaryOperation(new binaryOperationClass(exp1, op, exp2));
 		}
 	}
 }

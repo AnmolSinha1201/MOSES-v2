@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -40,7 +41,7 @@ namespace MOSESParser
             pos++;
 
             origin = pos;
-            return $"class {className} {{ {classBlockBuilder.ToString()} }} ";
+            return visitor.classDeclaration(new classDeclarationClass(className, classBlockBuilder.ToString()));
         }
 
         string newInstance(string code, ref int origin)
@@ -55,12 +56,12 @@ namespace MOSESParser
             pos += __new.Length;
 
             CRLFWS(code, ref pos);
-            string CName = complexFunctionCall(code, ref pos);
-            if (CName == null)
+            string cName = complexFunctionCall(code, ref pos);
+            if (cName == null)
                 return null;
 
             origin = pos;
-            return "new " + CName; 
+            return visitor.newInstance(new newInstanceClass(cName));
         }
 
         string newArray(string code, ref int origin)
@@ -79,7 +80,7 @@ namespace MOSESParser
             pos++;
 
             origin = pos;
-            return "[" + items.Count + "]";
+            return visitor.newArray(new newArrayClass(items));
         }
 
         string newDictionary(string code, ref int origin)
@@ -98,7 +99,7 @@ namespace MOSESParser
             pos++;
 
             origin = pos;
-            return "{" + dictionaryArgs.Count + "}";
+            return visitor.newDictionary(new newDictionaryClass(dictionaryArgs));
         }
 
         Dictionary<string, string> dictionaryParamList(string code, ref int origin)

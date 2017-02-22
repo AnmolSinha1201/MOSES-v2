@@ -1,5 +1,5 @@
 using System;
-using System.Text.RegularExpressions;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -10,7 +10,8 @@ namespace MOSESParser
             string _ifBlock = ifBlock(code, ref origin);
             if (_ifBlock == null)
                 return null;
-            return _ifBlock + elseBlock(code, ref origin);
+            string _elseBlock = elseBlock(code, ref origin);
+            return visitor.ifElseBlock(new ifElseBlockClass(_ifBlock, _elseBlock));
         }
 
         string ifBlock(string code, ref int origin)
@@ -42,7 +43,7 @@ namespace MOSESParser
             CRLFWS(code, ref pos);
 
             origin = pos;
-            return $"if ({exp}) {{{segVal}}}";
+            return visitor.ifBlock(new ifBlockClass(exp, segVal));
         }
 
         string elseBlock(string code, ref int origin)
@@ -61,7 +62,7 @@ namespace MOSESParser
             CRLFWS(code, ref pos);
 
             origin = pos;
-            return $"else {{{segVal}}}";
+            return visitor.elseBlock(new elseBlockClass(segVal));
         }
 	}
 }

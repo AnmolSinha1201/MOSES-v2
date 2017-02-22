@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -8,9 +9,10 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + chunk("loop(3){qwe=10\nasd=5\nbreak\nreturn, 123}", ref i));
+			Console.WriteLine("test : " + chunk("for(3; 123; 123){qwe=[10,20]\nasd=5\nbreak\nreturn, 123}", ref i));
 		}
 
+		public BaseVisitor visitor;
 		string chunk(string code, ref int origin)
 		{
 			code = removeComments(code);
@@ -78,7 +80,7 @@ namespace MOSESParser
 		string segmentBlock(string code, ref int origin)
 		{
 			int pos = origin;
-						if (code[pos] != '{')
+			if (code[pos] != '{')
 				return loopBlock(code, ref pos);;
 			pos++;
 
@@ -132,7 +134,7 @@ namespace MOSESParser
 				return null;
 			
 			origin = pos;
-			return _return + (bComma ? "," : "") + (exp == null ? "" : " " + exp);
+			return visitor.returnBlock(new returnBlockClass(exp));
 		}
 
 		string innerClassBlock(string code, ref int origin)
@@ -167,7 +169,7 @@ namespace MOSESParser
 			pos++;
 			
 			origin = pos;
-			return "#include (" + exp + ")";
+			return visitor.includeBlock(new includeBlockClass(exp));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 using System;
-using System.Text.RegularExpressions;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -19,7 +19,7 @@ namespace MOSESParser
                 return null;
             
             origin = pos;
-            return __try + (__catch == null ? "" : " " + __catch) + (__finally == null ? "" : " " +__finally);
+            return visitor.tryCatchFinally(new tryCatchFinallyClass(__try, __catch, __finally));
         }
 
         string _try(string code, ref int origin)
@@ -39,7 +39,7 @@ namespace MOSESParser
                 return null;
             
             origin = pos;
-            return __try + " {" + segVal + "}";
+            return visitor.tryBlock(new tryBlockClass(segVal));
         }
 
         string _catch(string code, ref int origin)
@@ -72,7 +72,7 @@ namespace MOSESParser
                 return null;
 
             origin = pos;
-            return __catch + (outVar == null? "" : $"({outVar})") + " {" + segVal + "}";
+            return visitor.catchBlock(new catchBlockClass(outVar, segVal));
         }
 
         string _finally(string code, ref int origin)
@@ -92,7 +92,7 @@ namespace MOSESParser
                 return null;
             
             origin = pos;
-            return __finally + " {" + segVal + "}";
+            return visitor.finallyBlock(new finallyBlockClass(segVal));
         }
 	}
 }

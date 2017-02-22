@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -13,25 +14,37 @@ namespace MOSESParser
 
 		string loop(string code, ref int origin)
 		{
-			return loopParser(code, ref origin, "loop", 1, ',', false); //delimiter won't be used
+			var v = (loopClass) loopParser(code, ref origin, "loop", 1, ',', false); //delimiter won't be used
+			if (v == null)
+				return null;
+			return visitor.loop(v);
 		}
 
 		string whileLoop(string code, ref int origin)
 		{
-			return loopParser(code, ref origin, "while", 1, ',', false); //delimiter won't be used
+			var v = (whileLoopClass) loopParser(code, ref origin, "while", 1, ',', false); //delimiter won't be used
+			if (v == null)
+				return null;
+			return visitor.whileLoop(v);
 		}
 
 		string loopParse(string code, ref int origin)
 		{
-			return loopParser(code, ref origin, "loopParse", 2, ',', false);
+			var v = (loopParseClass) loopParser(code, ref origin, "loopParse", 2, ',', false);
+			if (v == null)
+				return null;
+			return visitor.loopParse(v);
 		}
 
 		string forLoop(string code, ref int origin)
 		{
-			return loopParser(code, ref origin, "for", 3, ';', true);
+			var v = (forLoopClass) loopParser(code, ref origin, "for", 3, ';', true);
+			if (v == null)
+				return null;
+			return visitor.forLoop(v);
 		}
 
-		string loopParser(string code, ref int origin, string loopName, int expCount, char delimiter, bool optionalParams)
+		object loopParser(string code, ref int origin, string loopName, int expCount, char delimiter, bool optionalParams)
 		{
 			int pos = origin;
 			
@@ -77,7 +90,30 @@ namespace MOSESParser
 			if (segVal == null)
 				return null;
 			origin = pos;
-			return $"{loopName} ({exp.ToString()}) {{{segVal}}}"; 
+			return loopClassConstructor(loopName, exp, segVal); 
+		}
+
+		object loopClassConstructor(string loopName, List<string> exp, string segVal)
+		{
+			switch (loopName)
+			{
+				case "loop" :
+				return new loopClass(exp[0], segVal);
+				break;
+				
+				case "loopParse" :
+				return new loopParseClass(exp[0], exp[1], segVal);
+				break;
+
+				case "while" :
+				return new whileLoopClass(exp[0], segVal);
+				break;
+
+				case "for" :
+				return new forLoopClass(exp[0], exp[1], exp[2],  segVal);
+				break;
+			}
+			return null;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -39,7 +40,7 @@ namespace MOSESParser
 			if (match.Success)
 			{
 				origin = match.Index + match.Length;
-				return match.Value;
+				return visitor.STRING(new STRINGClass(match.Value));
 			}
 			return null;
 		}

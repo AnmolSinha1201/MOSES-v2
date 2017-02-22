@@ -1,4 +1,5 @@
 using System;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -37,7 +38,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return varName + " = " + value;
+			return visitor.variableAssign(new variableAssignClass(varName, op, value));
 		}
 
 		string opBuilder(string code, string[] matches)
@@ -58,7 +59,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return (_this == null ? "" : "this.") + vorF;
+			return visitor.complexVariable(new complexVariableClass(_this, vorF));
 		}
 
 		string constantVariableAssign(string code, ref int origin)
@@ -79,7 +80,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return varName + " = " + val;
+			return visitor.constantVariableAssign(new constantVariableAssignClass(varName, val));
 		}
 	}
 }

@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -33,7 +32,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return exp1 + " ? " + exp2 + " : " + exp3;
+			return visitor.ternaryIfElse(new ternaryIfElseClass(exp1, exp2, exp3));
 		}
 
 		string nullCoalascing(string code, ref int origin, string preExpression)
@@ -50,7 +49,7 @@ namespace MOSESParser
 				return null;
 
 			origin = pos;
-			return exp1 + " ?? " + exp2;
+			return visitor.nullCoalascing(new nullCoalascingClass(exp1, exp2));
 		}
 	}
 }

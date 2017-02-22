@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static MOSESParser.BaseVisitor;
 
 namespace MOSESParser
 {
@@ -31,7 +32,7 @@ namespace MOSESParser
 			pos++;
 
 			origin = pos;
-			return functionName + "("+ expressionList.Count +")";
+			return visitor.functionCall(new functionCallClass(functionName, expressionList));
 		}
 
 		List<string> functionCallList(string code, ref int origin)
@@ -69,7 +70,7 @@ namespace MOSESParser
 			if (vorF != null && vorF[vorF.Length - 1] == ')')
 			{
 				origin = pos;
-				return (_this == null ? "" : "this.") + vorF;
+				return visitor.complexFunctionCall(new complexFunctionCallClass(_this, vorF));
 			}
 			return null;
 		}
@@ -84,7 +85,7 @@ namespace MOSESParser
 			if (fBody == null)
 				return null;
 			
-			return fDef + " " + fBody;
+			return visitor.functionDeclaration(new functionDeclarationClass(fDef, fBody));
 		}
 
 		string functionDefinition(string code, ref int origin)
@@ -108,7 +109,7 @@ namespace MOSESParser
 			pos++;
 
 			origin = pos;
-			return $"{functionName} ({FPList.Count})";
+			return visitor.functionDefinition(new functionDefinitionClass(functionName, FPList));
 		}
 
 		string functionBody(string code, ref int origin)
@@ -132,13 +133,7 @@ namespace MOSESParser
 			pos++;
 			
 			origin = pos;
-			return "{ " + segValBlock.ToString() + " }";
-		}
-
-		class functionParameter
-		{
-			public string defaultValue, parameterName;
-			public bool byRef, variadic;
+			return visitor.functionBody(new functionBodyClass(segValBlock.ToString()));
 		}
 
 		#region functionParameterList
