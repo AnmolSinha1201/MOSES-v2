@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + chunk("loop(3){qwe=10\nasd=5\nbreak}", ref i));
+			Console.WriteLine("test : " + chunk("loop(3){qwe=10\nasd=5\nbreak\nreturn, 123}", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -53,7 +53,7 @@ namespace MOSESParser
 		string innerFuncionBlock(string code, ref int origin)
 		{
 			return  prePostIncrementDecrement(code, ref origin) ?? loops(code, ref origin) ?? ifElse(code, ref origin) ??
-			tryCatchFinally(code, ref origin) ?? complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin);
+			tryCatchFinally(code, ref origin) ?? returnBlock(code, ref origin) ?? complexFunctionCall(code, ref origin) ?? variableAssign(code, ref origin);
 		}
 
 		string loopBlock(string code, ref int origin)
@@ -105,14 +105,34 @@ namespace MOSESParser
 		string returnBlock(string code, ref int origin)
 		{
 			const string _return = "return";
-			if (code.Length <= origin + _return.Length)
+			int pos = origin;
+			if (code.Length < pos + _return.Length)
 				return null;
-			if (!code.Substring(origin, _return.Length).Equals(_return, StringComparison.OrdinalIgnoreCase
+			if (!code.Substring(pos, _return.Length).Equals(_return, StringComparison.OrdinalIgnoreCase
 			))
 				return null;
-			origin += _return.Length;
-			string exp = Expression(code, ref origin);
-			return _return + exp;
+			pos += _return.Length;
+
+			bool bComma = false;
+
+			WS(code, ref pos);
+			if (code.Length < pos + 1)
+			{
+				origin = pos;
+				return _return;
+			}
+			
+			if (code[pos] == ',')
+				bComma = true;
+			pos++;
+
+			WS(code, ref pos);
+			string exp = Expression(code, ref pos);
+			if (bComma && exp == null)
+				return null;
+			
+			origin = pos;
+			return _return + (bComma ? "," : "") + (exp == null ? "" : " " + exp);
 		}
 
 		string innerClassBlock(string code, ref int origin)
