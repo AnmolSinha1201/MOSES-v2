@@ -13,7 +13,7 @@ namespace MOSESParser
 		string preIncrementDecrement(string code, ref int origin)
 		{
 			int pos = origin;
-			if (code.Length <= origin + 2)
+			if (code.Length < origin + 2)
 				return null;
 
 			string op = code.Substring(pos, 2);
