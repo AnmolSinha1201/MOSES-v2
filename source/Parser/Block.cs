@@ -65,12 +65,12 @@ namespace MOSESParser
 			if (code.Length >= origin + "break".Length && code.Substring(origin, 5).Equals("break"))
 			{
 				origin += 5;
-				return "break";
+				return "break;";
 			}
 			else if (code.Length >= origin + "continue".Length && code.Substring(origin, 8).Equals("continue"))
 			{
 				origin += 8;
-				return "continue";
+				return "continue;";
 			}
 			return null;
 		}
