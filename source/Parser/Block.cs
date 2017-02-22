@@ -8,7 +8,7 @@ namespace MOSESParser
 		public void Test()
 		{
 			int i = 0;
-			Console.WriteLine("test : " + chunk("qwe=\"\"", ref i));
+			Console.WriteLine("test : " + chunk("loop(3){qwe=10\nasd=5\nbreak}", ref i));
 		}
 
 		string chunk(string code, ref int origin)
@@ -62,12 +62,12 @@ namespace MOSESParser
 			if (retVal != null)
 				return retVal;
 
-			if (code.Substring(origin, 5).Equals("break"))
+			if (code.Length >= origin + "break".Length && code.Substring(origin, 5).Equals("break"))
 			{
 				origin += 5;
 				return "break";
 			}
-			else if (code.Substring(origin, 8).Equals("continue"))
+			else if (code.Length >= origin + "continue".Length && code.Substring(origin, 8).Equals("continue"))
 			{
 				origin += 8;
 				return "continue";
@@ -78,8 +78,8 @@ namespace MOSESParser
 		string segmentBlock(string code, ref int origin)
 		{
 			int pos = origin;
-			if (code[pos] != '{')
-				return innerFuncionBlock(code, ref pos);;
+						if (code[pos] != '{')
+				return loopBlock(code, ref pos);;
 			pos++;
 
 			CRLFWS(code, ref pos);
@@ -88,7 +88,7 @@ namespace MOSESParser
 			while (true)
 			{
 				CRLFWS(code, ref pos);
-				blockVal = innerFuncionBlock(code, ref pos);
+				blockVal = loopBlock(code, ref pos);
 				if (blockVal == null)
 					break;
 				blockBuilder.Append(blockBuilder.Length == 0 ? blockVal : ("\n" + blockVal));
