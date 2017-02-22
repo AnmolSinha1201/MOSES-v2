@@ -71,7 +71,7 @@ namespace MOSESParser
             }
         }
 
-        string finallyBlock(finallyBlockClass context)
+        public virtual string finallyBlock(finallyBlockClass context)
         {
             return context.defaultValue;
         }

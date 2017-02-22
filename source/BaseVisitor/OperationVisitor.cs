@@ -25,10 +25,10 @@ namespace MOSESParser
 		#endregion
 
 		#region ternaryOperation
-		public class ternaryOperationClass
+		public class ternaryIfElseClass
 		{
 			public string condition, case1, case2, defaultValue;
-			public ternaryOperationClass(string condition, string case1, string case2)
+			public ternaryIfElseClass(string condition, string case1, string case2)
 			{
 				this.condition = condition;
 				this.case1 = case1;
@@ -37,7 +37,7 @@ namespace MOSESParser
 			}
 		}
 
-		public virtual string ternaryOperation(ternaryOperationClass context)
+		public virtual string ternaryIfElse(ternaryIfElseClass context)
 		{
 			return context.defaultValue;
 		}

@@ -8,38 +8,21 @@ namespace MOSESParser
         #region functionCall
         public class functionCallClass
         {
-            public string functionName, expressionList, defaultValue;
-            public functionCallClass(string functionName, string expressionList)
+            public string functionName, defaultValue;
+            List<string> functionCallList;
+            public functionCallClass(string functionName, List<string> functionCallList)
             {
                 this.functionName = functionName;
-                this.expressionList = expressionList;
-                this.defaultValue = $"{functionName} ({expressionList})";
-            }
-        }
-
-        public virtual string functionCall(functionCallClass context)
-		{
-            return context.defaultValue;
-		}
-        #endregion
-
-        #region functionCallList
-        public class functionCallListClass
-        {
-            public string defaultValue;
-            public List<string> functionCallList;
-            public functionCallListClass(List<string> functionCallList)
-            {
                 this.functionCallList = functionCallList;
 
                 StringBuilder sb = new StringBuilder();
                 foreach (var v in functionCallList)
                     sb.Append(sb.Length == 0 ? v : ", " + v);
-                this.defaultValue = sb.ToString();
+                this.defaultValue = $"{functionName} ({sb.ToString()})";
             }
         }
 
-		public virtual string functionCallList(functionCallListClass context)
+        public virtual string functionCall(functionCallClass context)
 		{
             return context.defaultValue;
 		}
@@ -98,7 +81,7 @@ namespace MOSESParser
             }
         }
 
-		public virtual string functionDefinition(functionCallClass context)
+		public virtual string functionDefinition(functionDefinitionClass context)
 		{
             return context.defaultValue;
 		}
