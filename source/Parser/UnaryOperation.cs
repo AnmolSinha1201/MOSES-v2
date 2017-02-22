@@ -38,7 +38,9 @@ namespace MOSESParser
 			string var = complexVariable(code, ref pos);
 			if (var == null)
 				return null;
-
+			
+			if (code.Length < pos + 2)
+				return null;
 			string op = code.Substring(pos, 2);
 			if (op != "++" && op != "--")
 				return null;
