@@ -52,7 +52,7 @@ namespace MOSESParser
 			pos++;
 
 			origin = pos;
-			return "( " + exp + " )";
+			return "(" + exp + ")";
 		}
 	}
 }
