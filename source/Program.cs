@@ -7,7 +7,9 @@ namespace ConsoleApplication
     {
         public static void Main(string[] args)
         {
+            var visitor = new MOSES.Visitor();
             var asd = new MOSESParser.Parser();
+            asd.visitor = visitor;
             asd.Test();
         }
     }
